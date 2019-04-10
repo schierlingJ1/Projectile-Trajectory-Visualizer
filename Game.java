@@ -3,7 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-public class Game extends JFrame{
+public class Game extends JFrame implements ActionListener{
    private final LayoutManager layout;
 
    MainMenu menu;
@@ -11,29 +11,19 @@ public class Game extends JFrame{
    private JTextField tfInitialVel;
    private JTextField tfInitialAng;
    private JTextField tfInitialSteps;
-   private JTextField txtFMajor;
-   private JTextField txtFGPA;
-   private JTextField txtFSID;
    private JLabel lblInitialVel;
    private JLabel lblInitialAng;
    private JLabel lblInitialSteps;
-   private JLabel lblMajor;
-   private JLabel lblGPA;
-   private JLabel lblSID;
-   private JLabel lblNumOfRecords;
    private JTextArea taMotion;
    private JButton btnCalculate;
    private JButton btnClear;
    private JButton btnMainMenu;
-   
-   private JFrame newFrame;
 
    public Game(){
       super("Physics Game");
       layout = new BorderLayout(); 
       setLayout(layout);
       
-      newFrame = new JFrame();
       menu = new MainMenu();
       
       lblInitialVel = new JLabel("Initial Vel.");
@@ -97,34 +87,9 @@ public class Game extends JFrame{
       add(mainEastPanel, BorderLayout.EAST);
       add(mainSouthPanel, BorderLayout.SOUTH);
          
-      btnClear.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent event){
-            tfInitialVel.setText("");
-            tfInitialAng.setText("");
-            tfInitialSteps.setText("");
-            taMotion.setText("");
-         }
-      });   
-         
-      btnMainMenu.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent event){
-            /*
-            Menu menu2 = new Menu(); 
-            menu2.setSize(250,300);
-            menu2.setLocation(100,15);
-            menu2.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
-            menu2.setResizable(false);
-            menu2.setVisible(true);
-            */
-            MainMenu menu2 = new MainMenu();
-            menu2.setSize(500, 400);
-            menu2.setLocation(350, 0);
-            menu2.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-            menu2.setResizable(false);
-            menu2.setVisible(true);
-            Game.this.dispose();
-         }
-      });   
+      btnMainMenu.addActionListener(this);
+      btnCalculate.addActionListener(this); 
+      btnClear.addActionListener(this);     
    }
    
    
@@ -133,19 +98,23 @@ public class Game extends JFrame{
       //event.getSource() returns the button object
       //See sample code below
       //JOptionPane.showMessageDialog(this,"You just pressed the " + event.getActionCommand(),"Demo",JOptionPane.INFORMATION_MESSAGE);
-      if(event.getSource() == btnClear){
-         /*
-         Menu menu2 = new Menu(); 
-         menu2.setSize(700,700);
-         menu2.setLocation(100,15);
-         menu2.setDefaultCloseOperation( JFrame.HIDE_ON_CLOSE );
-         menu2.setResizable(false);
-         menu2.setVisible(true);
-         */
-         JFrame newFrame = new JFrame();
-         newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-         newFrame.setSize(600, 500);
-         newFrame.setVisible(true);       
+      if(event.getSource() == btnMainMenu){
+         MainMenu menu2 = new MainMenu();
+            menu2.setSize(500, 400);
+            menu2.setLocation(450, 100);
+            menu2.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+            menu2.setResizable(false);
+            menu2.setVisible(true);
+            Game.this.dispose();      
+      }
+      else if(event.getSource() == btnCalculate){
+      
+      }
+      else if(event.getSource() == btnClear){
+            tfInitialVel.setText("");
+            tfInitialAng.setText("");
+            tfInitialSteps.setText("");
+            taMotion.setText("");
       }
        
    }
