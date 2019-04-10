@@ -8,9 +8,9 @@ public class MainMenu extends JFrame implements ActionListener{
    
    private JTextArea ta0;
    private JLabel lbl0;
-   private JButton btn0;
-   private JButton btn1;
-   private JButton btn2;
+   private JButton btnCalculator;
+   private JButton btnGame;
+   private JButton btnHighscores;
      
       
    public MainMenu(){
@@ -18,16 +18,12 @@ public class MainMenu extends JFrame implements ActionListener{
       layout = new BorderLayout(); 
       setLayout(layout);
       
-     
-      
-      //ta0 = new JTextArea("Physics", 10, 15);
-      //ta0.setEditable(false);
       lbl0 = new JLabel("Physics!!!");
       lbl0.setFont(new Font("Serif", Font.PLAIN, 30));
-      //lbl0.setPreferredSize(new Dimension(50, 50));
-      btn0 = new JButton("Calculator");
-      btn1 = new JButton("Game");
-      btn2 = new JButton("Highscores");
+      
+      btnCalculator = new JButton("Calculator");
+      btnGame = new JButton("Game");
+      btnHighscores = new JButton("Highscores");
       
       //JPanel mainPanel = new JPanel();
       //mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -42,11 +38,12 @@ public class MainMenu extends JFrame implements ActionListener{
                subCenter1.add(lbl0);
             JPanel subCenter2 = new JPanel();
             //subCenter2.setLayout(new BoxLayout(subCenter2, BoxLayout.X_AXIS));
-               subCenter2.add(btn0);
-               subCenter2.add(btn1);
+               subCenter2.add(btnCalculator);
+               subCenter2.add(btnGame);
                //subCenter2.add(btn2);
             JPanel subCenter3 = new JPanel();
-               subCenter3.add(btn2);
+               subCenter3.add(btnHighscores);
+               
       centerPanel.add(subCenter1);
       centerPanel.add(subCenter2);
       centerPanel.add(subCenter3);
@@ -55,20 +52,9 @@ public class MainMenu extends JFrame implements ActionListener{
       //add(centerPanel, BorderLayout.CENTER);
       //add(mainPanel, BorderLayout.CENTER);
       add(centerPanel);
-      
-      btn1.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent event){
-            Game game = new Game();
-            game.setSize(700,550);
-            game.setLocation(350,0);
-            game.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-            game.setResizable(false);
-            game.setVisible(true);
-            MainMenu.this.dispose();
-         } 
-      });
-      //btn1.addActionListener(this);
-      //btn2.addActionListener(this);
+      btnCalculator.addActionListener(this);
+      btnGame.addActionListener(this);
+      btnHighscores.addActionListener(this);
    }
    
    public void actionPerformed(ActionEvent event){
@@ -76,11 +62,24 @@ public class MainMenu extends JFrame implements ActionListener{
       //event.getSource() returns the button object
       //See sample code below
       //JOptionPane.showMessageDialog(this,"You just pressed the " + event.getActionCommand(),"Demo",JOptionPane.INFORMATION_MESSAGE);
-      if(event.getSource() == btn0){
-         //sQ.start();
-         //sQ = new StartQueue(taResults, tfHours, tfDays);
+      if(event.getSource() == btnCalculator){
+         Calculator calculator = new Calculator();
+         calculator.setSize(700,550);
+         calculator.setLocation(350,0);
+         calculator.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+         calculator.setResizable(false);
+         calculator.setVisible(true);
+         MainMenu.this.dispose();
       }
-         
+      else if(event.getSource() == btnGame){
+         Game game = new Game();
+         game.setSize(700,550);
+         game.setLocation(350,0);
+         game.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+         game.setResizable(false);
+         game.setVisible(true);
+         MainMenu.this.dispose();
+      }  
    }
    
    
