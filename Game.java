@@ -18,6 +18,7 @@ public class Game extends JFrame implements ActionListener{
    private JButton btnCalculate;
    private JButton btnClear;
    private JButton btnMainMenu;
+   private JButton btnExit;
 
    public Game(){
       super("Physics Game");
@@ -37,10 +38,13 @@ public class Game extends JFrame implements ActionListener{
       taMotion = new JTextArea(25, 40);  
       taMotion.setEditable(false);
       
-      btnCalculate = new JButton("Calculate");
+      btnCalculate = new JButton("Launch");
       btnClear = new JButton("Clear");
       btnMainMenu = new JButton("Main Menu");
+      btnExit = new JButton("Exit");
       
+      //old layout
+      /*
       JPanel westPanel = new JPanel();
       //westPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
       westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
@@ -77,19 +81,62 @@ public class Game extends JFrame implements ActionListener{
          subSouth1.add(btnCalculate);
          subSouth1.add(btnClear); 
          subSouth1.add(btnMainMenu);
+         subSouth1.add(btnExit);
       southPanel.add(subSouth1);
       
       JPanel mainSouthPanel = new JPanel();
       mainSouthPanel.add(southPanel);
+      */
+      
+      JPanel eastPanel = new JPanel();
+      eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
+         JPanel subEast1 = new JPanel();
+         subEast1.setLayout(new BoxLayout(subEast1, BoxLayout.Y_AXIS));
+         subEast1.add(lblInitialVel);
+         subEast1.add(tfInitialVel);
          
-      //add(westPanel, BorderLayout.WEST);
+         JPanel subEast2 = new JPanel();
+         subEast2.setLayout(new BoxLayout(subEast2, BoxLayout.Y_AXIS));
+         subEast2.add(lblInitialAng);
+         subEast2.add(tfInitialAng);
+         
+         JPanel subEast3 = new JPanel();
+         subEast3.setLayout(new BoxLayout(subEast3, BoxLayout.Y_AXIS));
+         subEast3.add(lblInitialSteps);
+         subEast3.add(tfInitialSteps);
+         
+         
+         JPanel subEast4 = new JPanel();
+         subEast4.setLayout(new BoxLayout(subEast4, BoxLayout.Y_AXIS));
+         subEast4.add(btnCalculate);
+         subEast4.add(btnClear); 
+         subEast4.add(btnMainMenu);
+         subEast4.add(btnExit);
+         
+      eastPanel.add(subEast1);
+      eastPanel.add(subEast2);
+      eastPanel.add(subEast3);
+      eastPanel.add(subEast4);
+      
+      //old layout
+      /* 
+      add(westPanel, BorderLayout.WEST);
       add(mainWestPanel, BorderLayout.WEST);
       add(mainEastPanel, BorderLayout.EAST);
       add(mainSouthPanel, BorderLayout.SOUTH);
+      */
+      
+      JPanel mainEastPanel = new JPanel();
+      mainEastPanel.add(eastPanel);
+         
+      add(taMotion);
+      add(mainEastPanel, BorderLayout.EAST);
+      
          
       btnMainMenu.addActionListener(this);
       btnCalculate.addActionListener(this); 
-      btnClear.addActionListener(this);     
+      btnClear.addActionListener(this);
+      btnExit.addActionListener(this);     
    }
    
    
@@ -100,21 +147,24 @@ public class Game extends JFrame implements ActionListener{
       //JOptionPane.showMessageDialog(this,"You just pressed the " + event.getActionCommand(),"Demo",JOptionPane.INFORMATION_MESSAGE);
       if(event.getSource() == btnMainMenu){
          MainMenu menu2 = new MainMenu();
-            menu2.setSize(500, 400);
-            menu2.setLocation(450, 100);
-            menu2.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-            menu2.setResizable(false);
-            menu2.setVisible(true);
-            Game.this.dispose();      
+         menu2.setSize(500, 400);
+         menu2.setLocation(450, 100);
+         menu2.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+         menu2.setResizable(false);
+         menu2.setVisible(true);
+         Game.this.dispose();      
       }
       else if(event.getSource() == btnCalculate){
       
       }
       else if(event.getSource() == btnClear){
-            tfInitialVel.setText("");
-            tfInitialAng.setText("");
-            tfInitialSteps.setText("");
-            taMotion.setText("");
+         tfInitialVel.setText("");
+         tfInitialAng.setText("");
+         tfInitialSteps.setText("");
+         taMotion.setText("");
+      }
+      else if(event.getSource() == btnExit){
+         System.exit(0);
       }
        
    }
@@ -122,8 +172,13 @@ public class Game extends JFrame implements ActionListener{
    public static void main(String[] args){
       Game game  = new Game();
       game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+      //old sizing
+      /*
       game.setSize(700, 550);
       game.setLocation(350, 0);
+      */
+      game.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+      game.setUndecorated(true);
       game.setVisible(true);
    }
    
