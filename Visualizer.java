@@ -37,8 +37,10 @@ public class Visualizer extends JComponent {
         //getContentPane().add(this.canvas);  //GridLayout will full the splitPane to the whole window
         //don't allow resizing the divider to eliminate multi-scroll bars on table panel
         this.canvas.setEnabled(false);
-        this.canvas.setOrientation(JSplitPane.HORIZONTAL_SPLIT);       //split the window horizontally
-        this.canvas.setDividerSize(1);      //make divier invivisible initially
+        //split the window horizontally
+        this.canvas.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        //make divier invivisible initially
+        this.canvas.setDividerSize(1);
         this.canvas.setDividerLocation(w);
         this.canvas.setLeftComponent(leftPanel);
         this.canvas.setRightComponent(rightPanel);
@@ -46,7 +48,6 @@ public class Visualizer extends JComponent {
         setVisible(true);
         //maximize window
         //setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-
     }
 
     public void setLeftPanel(int w, int h) {
@@ -112,6 +113,7 @@ public class Visualizer extends JComponent {
             arc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             //only display grid+markers first
             grid(g);
+            markers(g);
         }
 
         //call repaint when 'launch' button is clicked to display arc
