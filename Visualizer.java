@@ -3,7 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Visualizer extends JFrame {
+public class Visualizer extends JComponent {
 
     private JSplitPane canvas;
     private JPanel leftPanel;
@@ -34,7 +34,7 @@ public class Visualizer extends JFrame {
         //set window width/height
         setSize(new Dimension(w, h));
         //add canvas to the window
-        getContentPane().add(this.canvas);  //GridLayout will full the splitPane to the whole window
+        //getContentPane().add(this.canvas);  //GridLayout will full the splitPane to the whole window
         //don't allow resizing the divider to eliminate multi-scroll bars on table panel
         this.canvas.setEnabled(false);
         this.canvas.setOrientation(JSplitPane.HORIZONTAL_SPLIT);       //split the window horizontally
@@ -45,7 +45,7 @@ public class Visualizer extends JFrame {
 
         setVisible(true);
         //maximize window
-        setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+        //setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
 
     }
 
@@ -88,6 +88,10 @@ public class Visualizer extends JFrame {
         this.rightPanel.setVisible(true);
     }
 
+    public JSplitPane getVisualizer() {
+        return this.canvas;
+    }
+
     //new arc definiton
     private class DrawArc extends JComponent {
 
@@ -106,12 +110,19 @@ public class Visualizer extends JFrame {
             Graphics2D arc = (Graphics2D)g;
             //cleans up edges of whatever is drawn on screen
             arc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            //only display grid+markers first
+            grid(g);
+        }
+
+        //call repaint when 'launch' button is clicked to display arc
+        public void repaint(Graphics g) {
+            //extend Graphics to draw 2D shapes
+            Graphics2D arc = (Graphics2D)g;
+            //cleans up edges of whatever is drawn on screen
+            arc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             markers(g); //markers first so axis overlaps them in black
             grid(g);
             parabola(g);
-
-            //automated interpolation
-            //scale/zoom grid
         }
 
         //draw grid/axis
