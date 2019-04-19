@@ -11,14 +11,21 @@ public class Calculator extends JFrame implements ActionListener{
    private JTextField tfInitialVel;
    private JTextField tfInitialAng;
    private JTextField tfInitialSteps;
+   private JTextField tfHeight;
    private JLabel lblInitialVel;
    private JLabel lblInitialAng;
    private JLabel lblInitialSteps;
+   private JLabel lblHeight;
    private JTextArea taMotion;
    private JButton btnCalculate;
    private JButton btnClear;
    private JButton btnMainMenu;
    private JButton btnExit;
+   
+   private JPanel graphPanel;
+   
+   private JSplitPane splitPane;
+   private Visualizer visualizer;
 
    public Calculator(){
       super("Physics Calculator");
@@ -30,10 +37,12 @@ public class Calculator extends JFrame implements ActionListener{
       lblInitialVel = new JLabel("Initial Velocity:");
       lblInitialAng = new JLabel("Initial Angle:");
       lblInitialSteps = new JLabel("# of Steps:");
+      lblHeight = new JLabel("Initial Height:");
       
-      tfInitialVel = new JTextField(7);
-      tfInitialAng = new JTextField(7);
-      tfInitialSteps = new JTextField(7);    
+      tfInitialVel = new JTextField("100",7);
+      tfInitialAng = new JTextField("45",7);
+      tfInitialSteps = new JTextField("100",7);    
+      tfHeight = new JTextField("0",7);
       
       taMotion = new JTextArea(25, 40);  
       taMotion.setEditable(false);
@@ -123,18 +132,23 @@ public class Calculator extends JFrame implements ActionListener{
          subEast3.add(lblInitialSteps);
          subEast3.add(tfInitialSteps);
          
-         
          JPanel subEast4 = new JPanel();
          subEast4.setLayout(new BoxLayout(subEast4, BoxLayout.Y_AXIS));
-         subEast4.add(btnCalculate);
-         subEast4.add(btnClear); 
-         subEast4.add(btnMainMenu);
-         subEast4.add(btnExit);
+         subEast4.add(lblHeight);
+         subEast4.add(tfHeight);
+         
+         JPanel subEast5 = new JPanel();
+         subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
+         subEast5.add(btnCalculate);
+         subEast5.add(btnClear); 
+         subEast5.add(btnMainMenu);
+         subEast5.add(btnExit);
          
       eastPanel.add(subEast1);
       eastPanel.add(subEast2);
       eastPanel.add(subEast3);
       eastPanel.add(subEast4);
+      eastPanel.add(subEast5);
       //old layout
       /*
       JPanel mainSouthPanel = new JPanel();
@@ -148,13 +162,28 @@ public class Calculator extends JFrame implements ActionListener{
       add(mainWestPanel, BorderLayout.WEST);
       add(mainEastPanel, BorderLayout.EAST);
       */
-      add(taMotion);
-      add(mainEastPanel, BorderLayout.EAST);
+      //add(taMotion);
+      add(mainEastPanel, BorderLayout.WEST);
+      //add(taMotion);
       //old layout
       /*
       add(mainSouthPanel, BorderLayout.EAST);
       add(southPanel, BorderLayout.SOUTH);
       */   
+      
+      graphPanel = new JPanel();
+      graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+      //graphPanel.add(splitPane);
+      
+      visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps); 
+      //add(visualizer.getRightPanel());
+      //add(visualizer.getLeftPanel());   
+      //graphPanel.add(visualizer.getLeftPanel());
+      //graphPanel.add(visualizer.getRightPanel());
+      graphPanel.add(visualizer.getPane());
+      graphPanel.setVisible(false);
+      add(graphPanel);  
+      
       btnMainMenu.addActionListener(this);
       btnCalculate.addActionListener(this); 
       btnClear.addActionListener(this);
@@ -176,12 +205,27 @@ public class Calculator extends JFrame implements ActionListener{
             Calculator.this.dispose();      
       }
       else if(event.getSource() == btnCalculate){
-      
+         //visualizer.start();
+         //graphPanel.add(visualizer.getPane());
+         //add(visualizer.getRightPanel());
+         //add(visualizer.getLeftPanel());
+         remove(graphPanel);
+         graphPanel = new JPanel();
+         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+         graphPanel.setVisible(true);
+         visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+         graphPanel.add(visualizer.getPane());
+         //graphPanel.setVisible(false);
+         add(graphPanel);
+         validate();
+         //add(visualizer.getRightPanel());
+         //add(visualizer.getLeftPanel());
       }
       else if(event.getSource() == btnClear){
             tfInitialVel.setText("");
             tfInitialAng.setText("");
             tfInitialSteps.setText("");
+            tfHeight.setText("");
             taMotion.setText("");
       }  
       else if(event.getSource() == btnExit){

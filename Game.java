@@ -3,6 +3,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+
 public class Game extends JFrame implements ActionListener{
    private final LayoutManager layout;
 
@@ -11,14 +12,23 @@ public class Game extends JFrame implements ActionListener{
    private JTextField tfInitialVel;
    private JTextField tfInitialAng;
    private JTextField tfInitialSteps;
+   private JTextField tfInitialHeight;
    private JLabel lblInitialVel;
    private JLabel lblInitialAng;
    private JLabel lblInitialSteps;
+   private JLabel lblInitialHeight;
    private JTextArea taMotion;
-   private JButton btnCalculate;
+   private JButton btnLaunch;
    private JButton btnClear;
    private JButton btnMainMenu;
    private JButton btnExit;
+   
+   private JPanel graphPanel;
+   
+   private JSplitPane splitPane;
+   private Visualizer visualizer;
+   
+   private Thread thread;
 
    public Game(){
       super("Physics Game");
@@ -30,15 +40,17 @@ public class Game extends JFrame implements ActionListener{
       lblInitialVel = new JLabel("Initial Vel.");
       lblInitialAng = new JLabel("Initial Ang.");
       lblInitialSteps = new JLabel("# of Steps.");
+      lblInitialHeight = new JLabel("Initial Height:");
       
-      tfInitialVel = new JTextField(7);
-      tfInitialAng = new JTextField(7);
-      tfInitialSteps = new JTextField(7);    
+      tfInitialVel = new JTextField("100",7);
+      tfInitialAng = new JTextField("45",7);
+      tfInitialSteps = new JTextField("100",7);    
+      tfInitialHeight = new JTextField("0",7);
       
       taMotion = new JTextArea(25, 40);  
       taMotion.setEditable(false);
       
-      btnCalculate = new JButton("Launch");
+      btnLaunch = new JButton("Launch");
       btnClear = new JButton("Clear");
       btnMainMenu = new JButton("Main Menu");
       btnExit = new JButton("Exit");
@@ -103,20 +115,25 @@ public class Game extends JFrame implements ActionListener{
          JPanel subEast3 = new JPanel();
          subEast3.setLayout(new BoxLayout(subEast3, BoxLayout.Y_AXIS));
          subEast3.add(lblInitialSteps);
-         subEast3.add(tfInitialSteps);
-         
-         
+         subEast3.add(tfInitialSteps);  
+       
          JPanel subEast4 = new JPanel();
          subEast4.setLayout(new BoxLayout(subEast4, BoxLayout.Y_AXIS));
-         subEast4.add(btnCalculate);
-         subEast4.add(btnClear); 
-         subEast4.add(btnMainMenu);
-         subEast4.add(btnExit);
+         subEast4.add(lblInitialHeight);
+         subEast4.add(tfInitialHeight);
+         
+         JPanel subEast5 = new JPanel();
+         subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
+         subEast5.add(btnLaunch);
+         subEast5.add(btnClear); 
+         subEast5.add(btnMainMenu);
+         subEast5.add(btnExit);
          
       eastPanel.add(subEast1);
       eastPanel.add(subEast2);
       eastPanel.add(subEast3);
       eastPanel.add(subEast4);
+      eastPanel.add(subEast5);
       
       //old layout
       /* 
@@ -128,15 +145,30 @@ public class Game extends JFrame implements ActionListener{
       
       JPanel mainEastPanel = new JPanel();
       mainEastPanel.add(eastPanel);
-         
-      add(taMotion);
-      add(mainEastPanel, BorderLayout.EAST);
       
          
+      //add(taMotion);
+      add(mainEastPanel, BorderLayout.WEST);
+      //add(taMotion);
+      //add(graphPanel);
+      
+      graphPanel = new JPanel();
+      graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+      //graphPanel.add(splitPane);
+      
+      visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps); 
+      //add(visualizer.getRightPanel());
+      //add(visualizer.getLeftPanel());   
+      //graphPanel.add(visualizer.getLeftPanel());
+      //graphPanel.add(visualizer.getRightPanel());
+      graphPanel.add(visualizer.getPane());
+      graphPanel.setVisible(false);
+      add(graphPanel);
+      
       btnMainMenu.addActionListener(this);
-      btnCalculate.addActionListener(this); 
+      btnLaunch.addActionListener(this); 
       btnClear.addActionListener(this);
-      btnExit.addActionListener(this);     
+      btnExit.addActionListener(this); 
    }
    
    
@@ -154,13 +186,28 @@ public class Game extends JFrame implements ActionListener{
          menu2.setVisible(true);
          Game.this.dispose();      
       }
-      else if(event.getSource() == btnCalculate){
-      
+      else if(event.getSource() == btnLaunch){
+         //visualizer.start();
+         //graphPanel.add(visualizer.getPane());
+         //add(visualizer.getRightPanel());
+         //add(visualizer.getLeftPanel());
+         remove(graphPanel);
+         graphPanel = new JPanel();
+         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+         graphPanel.setVisible(true);
+         visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps);
+         graphPanel.add(visualizer.getPane());
+         //graphPanel.setVisible(false);
+         add(graphPanel);
+         validate();
+         //add(visualizer.getRightPanel());
+         //add(visualizer.getLeftPanel());
       }
       else if(event.getSource() == btnClear){
          tfInitialVel.setText("");
          tfInitialAng.setText("");
          tfInitialSteps.setText("");
+         tfInitialHeight.setText("");
          taMotion.setText("");
       }
       else if(event.getSource() == btnExit){
