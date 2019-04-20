@@ -74,7 +74,6 @@ public class ProjectileMotion{
     double totalTime = (1 / GRAVITY) * (yVelocity + Math.sqrt(Math.pow(yVelocity,2) + 2 * GRAVITY * height));
     // time increment = total time/steps == t = -2(y-v0)/g 
     this.timeIncrement = totalTime / steps;
-    System.out.println("yasss");
   }
   
   /*
