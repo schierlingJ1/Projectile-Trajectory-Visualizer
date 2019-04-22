@@ -9,50 +9,60 @@ public class Visualizer extends JFrame {
     private JPanel leftPanel;
     private JPanel rightPanel;
     private ProjectileMotion projectile;
-    
+    private Dimension screenSize;
+
     private static JTextField tfVelocity;
     private static JTextField tfAngle;
     private static JTextField tfHeight;
     private static JTextField tfSteps;
-    
+
     private double maxHeight;
     private double maxRange;
     private double totalTime;
-    
+
     private static JPanel mainPanel;
 
    /*
     public static void main(String args[]) {
         new Visualizer();
     }
-   */  
-    
+   */
+
     public JSplitPane getPane(){
       return canvas;
     }
-    
+
     public double getMaxHeight(){
       maxHeight = this.projectile.maxHeight();
       return maxHeight;
     }
-    
+
     public double getMaxRange(){
       maxRange = this.projectile.maxRange();
       return maxRange;
     }
-    
+
     public double getTotalTime(){
       totalTime = this.projectile.totalTime();
       return totalTime;
     }
 
-    
+    public int getHeight() {
+        return this.screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
+
+    }
+
+    public int getWidth() {
+        return this.screenSize.width; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
+    }
+
+
     public Visualizer() {
-         
+
         // get the screen size as a java dimension
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int height = screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
-        int width = screenSize.width;
+        this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = this.screenSize.height;
+        int width = this.screenSize.width;
 
         this.canvas = new JSplitPane();
         this.leftPanel = new JPanel();
@@ -63,15 +73,15 @@ public class Visualizer extends JFrame {
         setLeftPanel(width, height);
         setCanvas(width, height);
     }
-    
-    
+
+
     public Visualizer(JPanel mainPanel, JTextField tfVelocity, JTextField tfAngle, JTextField tfHeight, JTextField tfSteps) {
         this.tfVelocity = tfVelocity;
         this.tfAngle = tfAngle;
         this.tfHeight = tfHeight;
         this.tfSteps = tfSteps;
         this.mainPanel = mainPanel;
-        
+
         // get the screen size as a java dimension
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
@@ -81,8 +91,8 @@ public class Visualizer extends JFrame {
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         //this.projectile = new ProjectileMotion();
-        this.projectile = new ProjectileMotion(Double.parseDouble(tfVelocity.getText()), 
-        Double.parseDouble(tfAngle.getText()), Double.parseDouble(tfHeight.getText()), 
+        this.projectile = new ProjectileMotion(Double.parseDouble(tfVelocity.getText()),
+        Double.parseDouble(tfAngle.getText()), Double.parseDouble(tfHeight.getText()),
         Integer.parseInt(tfSteps.getText()));
 
 
@@ -90,7 +100,7 @@ public class Visualizer extends JFrame {
         setLeftPanel(width, height);
         setCanvas(width, height);
     }
-       
+
     public void setCanvas(int w, int h) {
         //set window width/height
         setSize(new Dimension(w, h));
@@ -107,40 +117,15 @@ public class Visualizer extends JFrame {
         //setVisible(true);
         //maximize window
         //setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        
+
         //mainPanel.add(canvas);
 
     }
-   
+
     public void setLeftPanel(int w, int h) {
         Visualizer.DrawArc grid = new DrawArc(w, h);
         this.leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // BoxLayout.Y_AXIS will arrange the content vertically
         this.leftPanel.add(grid);
-
-        //add button to show/hide table
-        JButton b = new JButton("Show Table");
-        //disable 'focus' bordering around text
-        b.setFocusPainted(false);
-        //add the listener
-        b.addActionListener(new ActionListener() {
-            boolean showTable = false;
-            public void actionPerformed(ActionEvent e) {
-                //show table
-                if (showTable == false) {
-                    Visualizer.this.canvas.setDividerLocation((int)Math.round(w*3/4));
-                    Visualizer.this.canvas.setDividerSize(10);
-                    b.setText("Hide Table");
-                    showTable = true;
-                //hide table
-                } else {
-                    Visualizer.this.canvas.setDividerLocation(w);
-                    Visualizer.this.canvas.setDividerSize(1);
-                    b.setText("Show Table");
-                    showTable = false;
-               }
-            }
-        });
-		this.leftPanel.add(b);
         this.leftPanel.setVisible(true);
     }
 
@@ -283,7 +268,7 @@ public class Visualizer extends JFrame {
             //y-axis tick marks
             for (int y = this.height-220, scale = 20; y > 0; y -= 40, scale += 40) {
                 //gray-out axis
-                if (y < ((this.height-200) - (int)Math.round(Visualizer.this.projectile.maxHeight()))) {
+                if (y <= ((this.height-200) - (int)Math.round(Visualizer.this.projectile.maxHeight()))) {
                     g.setColor(Color.gray);
                 }
                 g.drawLine(40, y, 60, y-1);
