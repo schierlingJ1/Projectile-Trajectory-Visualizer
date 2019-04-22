@@ -18,8 +18,8 @@ public class MainMenu extends JFrame implements ActionListener{
       layout = new BorderLayout(); 
       setLayout(layout);
       
-      lbl0 = new JLabel("Physics!!!");
-      lbl0.setFont(new Font("Serif", Font.PLAIN, 30));
+      lbl0 = new JLabel("Physics Tracker & Visualizer");
+      lbl0.setFont(new Font("", Font.PLAIN, 30));
       
       btnCalculator = new JButton("Calculator");
       btnGame = new JButton("Game");
