@@ -58,7 +58,7 @@ public class ProjectileMotion{
     
    public ProjectileMotion(double v, double a, double h, int s){
     this.velocity = v;
-    this.angle = a;
+    this.angle = Math.toRadians(a);
     this.height = h;
     this.steps = s;
 
