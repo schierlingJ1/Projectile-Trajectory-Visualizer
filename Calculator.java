@@ -24,6 +24,7 @@ public class Calculator extends JFrame implements ActionListener{
    private JButton btnClear;
    private JButton btnMainMenu;
    private JButton btnExit;
+  
    
    private JPanel graphPanel;
    
@@ -41,9 +42,6 @@ public class Calculator extends JFrame implements ActionListener{
       lblInitialAng = new JLabel("Initial Angle:");
       lblInitialSteps = new JLabel("# of Steps:");
       lblHeight = new JLabel("Initial Height:");
-      //lblMaxHeight = new JLabel("Max Height:");
-      //lblMaxRange = new JLabel("Max Range:");
-      //lblMaxTime = new JLabel("Total Time:");
       
       tfInitialVel = new JTextField("0",7);
       tfInitialAng = new JTextField("0",7);
@@ -54,9 +52,13 @@ public class Calculator extends JFrame implements ActionListener{
       taInfo.setEditable(false);
       
       btnCalculate = new JButton("Calculate");
+      btnCalculate.setFocusPainted(false);
       btnClear = new JButton("Clear");
+      btnClear.setFocusPainted(false);
       btnMainMenu = new JButton("Main Menu");
+      btnMainMenu.setFocusPainted(false);
       btnExit = new JButton("Exit");
+      btnExit.setFocusPainted(false);
       
       //bunch of old layouts
       /*
@@ -224,26 +226,127 @@ public class Calculator extends JFrame implements ActionListener{
          //graphPanel.add(visualizer.getPane());
          //add(visualizer.getRightPanel());
          //add(visualizer.getLeftPanel());
-         remove(graphPanel);
-         graphPanel = new JPanel();
-         graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-         graphPanel.setVisible(true);
-         visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
-         graphPanel.add(visualizer.getPane());
-         //graphPanel.setVisible(false);
-         add(graphPanel);
-         validate();
          
-         maxHeight = Double.toString(visualizer.getMaxHeight());
-         taInfo.setText("Max Height:\n");
-         taInfo.append(maxHeight + "\n\n");
+         double velocity = Double.parseDouble(tfInitialVel.getText());
+         double angle = Double.parseDouble(tfInitialAng.getText());
+         int steps = Integer.parseInt(tfInitialSteps.getText());
+         double height = Double.parseDouble(tfHeight.getText());
          
-         maxRange = Double.toString(visualizer.getMaxRange());
-         taInfo.append("Max Range:\n");
-         taInfo.append(maxRange + "\n\n");
          
-         //add(visualizer.getRightPanel());
-         //add(visualizer.getLeftPanel());
+         if(velocity < 0){
+            taInfo.setText("Velocity must be positive\n");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate();       
+         }
+         else if(angle < 0 || angle > 90){
+            taInfo.setText("Angle must be between 0-90 degrees");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate(); 
+         }
+         else if(steps < 10){
+            taInfo.setText("Steps must be greater than 10");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate(); 
+         }
+         else if(height < 0){
+            taInfo.setText("Height must be positive");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate(); 
+         }
+         else{
+            Font font =  new Font("", Font.PLAIN, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.BLACK);
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate();
+        
+            maxHeight = String.format("%.2f", visualizer.getMaxHeight()); 
+            taInfo.setText("Max Height:\n");
+            taInfo.append(maxHeight + "\n\n");
+            
+            maxRange = Double.toString(visualizer.getMaxRange());
+            maxRange = String.format("%.2f", visualizer.getMaxRange());
+            taInfo.append("Max Range:\n");
+            taInfo.append(maxRange + "\n\n");
+   
+            maxTime = Double.toString(visualizer.getTotalTime());
+            maxTime = String.format("%.2f", visualizer.getTotalTime());
+            taInfo.append("Max Time:\n");
+            taInfo.append(maxTime + "\n\n");
+          }
+            
       }
       else if(event.getSource() == btnClear){
             tfInitialVel.setText("0");
@@ -251,6 +354,16 @@ public class Calculator extends JFrame implements ActionListener{
             tfInitialSteps.setText("0");
             tfHeight.setText("0");
             taInfo.setText("");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate();
       }  
       else if(event.getSource() == btnExit){
          System.exit(0);

@@ -15,6 +15,10 @@ public class Visualizer extends JFrame {
     private static JTextField tfHeight;
     private static JTextField tfSteps;
     
+    private double maxHeight;
+    private double maxRange;
+    private double totalTime;
+    
     private static JPanel mainPanel;
 
    /*
@@ -27,12 +31,19 @@ public class Visualizer extends JFrame {
       return canvas;
     }
     
-    public JPanel getRightPanel(){
-      return rightPanel;
+    public double getMaxHeight(){
+      maxHeight = this.projectile.maxHeight();
+      return maxHeight;
     }
     
-    public JPanel getLeftPanel(){
-      return leftPanel;
+    public double getMaxRange(){
+      maxRange = this.projectile.maxRange();
+      return maxRange;
+    }
+    
+    public double getTotalTime(){
+      totalTime = this.projectile.totalTime();
+      return totalTime;
     }
 
     
