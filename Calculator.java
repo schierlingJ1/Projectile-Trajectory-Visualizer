@@ -16,7 +16,10 @@ public class Calculator extends JFrame implements ActionListener{
    private JLabel lblInitialAng;
    private JLabel lblInitialSteps;
    private JLabel lblHeight;
-   private JTextArea taMotion;
+   private String maxHeight;
+   private String maxRange;
+   private String maxTime;
+   private JTextArea taInfo;
    private JButton btnCalculate;
    private JButton btnClear;
    private JButton btnMainMenu;
@@ -38,14 +41,17 @@ public class Calculator extends JFrame implements ActionListener{
       lblInitialAng = new JLabel("Initial Angle:");
       lblInitialSteps = new JLabel("# of Steps:");
       lblHeight = new JLabel("Initial Height:");
+      //lblMaxHeight = new JLabel("Max Height:");
+      //lblMaxRange = new JLabel("Max Range:");
+      //lblMaxTime = new JLabel("Total Time:");
       
-      tfInitialVel = new JTextField("100",7);
-      tfInitialAng = new JTextField("45",7);
+      tfInitialVel = new JTextField("0",7);
+      tfInitialAng = new JTextField("0",7);
       tfInitialSteps = new JTextField("100",7);    
       tfHeight = new JTextField("0",7);
       
-      taMotion = new JTextArea(25, 40);  
-      taMotion.setEditable(false);
+      taInfo = new JTextArea(10, 15);  
+      taInfo.setEditable(false);
       
       btnCalculate = new JButton("Calculate");
       btnClear = new JButton("Clear");
@@ -144,11 +150,19 @@ public class Calculator extends JFrame implements ActionListener{
          subEast5.add(btnMainMenu);
          subEast5.add(btnExit);
          
+         
+         JPanel subEast6 = new JPanel();
+         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
+         subEast6.add(taInfo);
+         
       eastPanel.add(subEast1);
       eastPanel.add(subEast2);
       eastPanel.add(subEast3);
       eastPanel.add(subEast4);
       eastPanel.add(subEast5);
+      eastPanel.add(subEast6);
+      //eastPanel.add(taInfo);
+      
       //old layout
       /*
       JPanel mainSouthPanel = new JPanel();
@@ -164,6 +178,7 @@ public class Calculator extends JFrame implements ActionListener{
       */
       //add(taMotion);
       add(mainEastPanel, BorderLayout.WEST);
+   
       //add(taMotion);
       //old layout
       /*
@@ -181,7 +196,7 @@ public class Calculator extends JFrame implements ActionListener{
       //graphPanel.add(visualizer.getLeftPanel());
       //graphPanel.add(visualizer.getRightPanel());
       graphPanel.add(visualizer.getPane());
-      graphPanel.setVisible(false);
+      //graphPanel.setVisible(false);
       add(graphPanel);  
       
       btnMainMenu.addActionListener(this);
@@ -218,15 +233,24 @@ public class Calculator extends JFrame implements ActionListener{
          //graphPanel.setVisible(false);
          add(graphPanel);
          validate();
+         
+         maxHeight = Double.toString(visualizer.getMaxHeight());
+         taInfo.setText("Max Height:\n");
+         taInfo.append(maxHeight + "\n\n");
+         
+         maxRange = Double.toString(visualizer.getMaxRange());
+         taInfo.append("Max Range:\n");
+         taInfo.append(maxRange + "\n\n");
+         
          //add(visualizer.getRightPanel());
          //add(visualizer.getLeftPanel());
       }
       else if(event.getSource() == btnClear){
-            tfInitialVel.setText("");
-            tfInitialAng.setText("");
-            tfInitialSteps.setText("");
-            tfHeight.setText("");
-            taMotion.setText("");
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfHeight.setText("0");
+            taInfo.setText("");
       }  
       else if(event.getSource() == btnExit){
          System.exit(0);
