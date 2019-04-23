@@ -205,6 +205,22 @@ public class Visualizer extends JFrame {
             //----------------------------------------
         }
 
+        //draw blank grid without graph
+        public void blank(Graphics g) {
+            //draw white background for grid
+            g.setColor(Color.white);
+            g.fillRect(60, 0, this.width, this.height-200);
+
+            g.setColor(Color.black);
+            //x axis
+            g.drawLine(20, this.height-200, this.width, this.height-200);
+            g.drawLine(20, this.height-199, this.width, this.height-199);
+            //y axis
+            g.drawLine(60,0,60,this.height-160);
+            g.drawLine(61,0,61,this.height-160);
+            //----------------------------------------
+        }
+
         //draw dotted parabola trajectory
         public void parabola(Graphics g) {
             // 0,0 coordiante for graph
