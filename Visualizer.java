@@ -3,18 +3,52 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Visualizer extends JComponent {
+public class Visualizer extends JFrame {
 
     private JSplitPane canvas;
     private JPanel leftPanel;
     private JPanel rightPanel;
     private ProjectileMotion projectile;
 
+    private static JTextField tfVelocity;
+    private static JTextField tfAngle;
+    private static JTextField tfHeight;
+    private static JTextField tfSteps;
+
+    private double maxHeight;
+    private double maxRange;
+    private double totalTime;
+
+    private static JPanel mainPanel;
+
+   /*
     public static void main(String args[]) {
         new Visualizer();
     }
+   */
+
+    public JSplitPane getPane(){
+      return canvas;
+    }
+
+    public double getMaxHeight(){
+      maxHeight = this.projectile.maxHeight();
+      return maxHeight;
+    }
+
+    public double getMaxRange(){
+      maxRange = this.projectile.maxRange();
+      return maxRange;
+    }
+
+    public double getTotalTime(){
+      totalTime = this.projectile.totalTime();
+      return totalTime;
+    }
+
 
     public Visualizer() {
+
         // get the screen size as a java dimension
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
@@ -30,24 +64,52 @@ public class Visualizer extends JComponent {
         setCanvas(width, height);
     }
 
+
+    public Visualizer(JPanel mainPanel, JTextField tfVelocity, JTextField tfAngle, JTextField tfHeight, JTextField tfSteps) {
+        this.tfVelocity = tfVelocity;
+        this.tfAngle = tfAngle;
+        this.tfHeight = tfHeight;
+        this.tfSteps = tfSteps;
+        this.mainPanel = mainPanel;
+
+        // get the screen size as a java dimension
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int height = screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
+        int width = screenSize.width;
+
+        this.canvas = new JSplitPane();
+        this.leftPanel = new JPanel();
+        this.rightPanel = new JPanel();
+        //this.projectile = new ProjectileMotion();
+        this.projectile = new ProjectileMotion(Double.parseDouble(tfVelocity.getText()),
+        Double.parseDouble(tfAngle.getText()), Double.parseDouble(tfHeight.getText()),
+        Integer.parseInt(tfSteps.getText()));
+
+
+        setRightPanel();
+        setLeftPanel(width, height);
+        setCanvas(width, height);
+    }
+
     public void setCanvas(int w, int h) {
         //set window width/height
         setSize(new Dimension(w, h));
         //add canvas to the window
-        //getContentPane().add(this.canvas);  //GridLayout will full the splitPane to the whole window
+        getContentPane().add(this.canvas);  //GridLayout will full the splitPane to the whole window
         //don't allow resizing the divider to eliminate multi-scroll bars on table panel
         this.canvas.setEnabled(false);
-        //split the window horizontally
-        this.canvas.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        //make divier invivisible initially
-        this.canvas.setDividerSize(1);
+        this.canvas.setOrientation(JSplitPane.HORIZONTAL_SPLIT);       //split the window horizontally
+        this.canvas.setDividerSize(1);      //make divier invivisible initially
         this.canvas.setDividerLocation(w);
         this.canvas.setLeftComponent(leftPanel);
         this.canvas.setRightComponent(rightPanel);
 
-        setVisible(true);
+        //setVisible(true);
         //maximize window
         //setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
+
+        //mainPanel.add(canvas);
+
     }
 
     public void setLeftPanel(int w, int h) {
@@ -78,7 +140,7 @@ public class Visualizer extends JComponent {
                }
             }
         });
-		this.leftPanel.add(b);
+		//this.leftPanel.add(b);
         this.leftPanel.setVisible(true);
     }
 
@@ -87,10 +149,6 @@ public class Visualizer extends JComponent {
         this.rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         this.rightPanel.add(table);
         this.rightPanel.setVisible(true);
-    }
-
-    public JSplitPane getVisualizer() {
-        return this.canvas;
     }
 
     //new arc definiton
@@ -111,20 +169,12 @@ public class Visualizer extends JComponent {
             Graphics2D arc = (Graphics2D)g;
             //cleans up edges of whatever is drawn on screen
             arc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            //only display grid+markers first
-            grid(g);
-            markers(g);
-        }
-
-        //call repaint when 'launch' button is clicked to display arc
-        public void repaint(Graphics g) {
-            //extend Graphics to draw 2D shapes
-            Graphics2D arc = (Graphics2D)g;
-            //cleans up edges of whatever is drawn on screen
-            arc.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             markers(g); //markers first so axis overlaps them in black
             grid(g);
             parabola(g);
+
+            //automated interpolation
+            //scale/zoom grid
         }
 
         //draw grid/axis
