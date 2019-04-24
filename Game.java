@@ -2,10 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
+import java.util.ArrayList;
 
 
 public class Game extends JFrame implements ActionListener{
    private final LayoutManager layout;
+
+   private boolean showTable;
 
    MainMenu menu;
    
@@ -17,18 +20,34 @@ public class Game extends JFrame implements ActionListener{
    private JLabel lblInitialAng;
    private JLabel lblInitialSteps;
    private JLabel lblInitialHeight;
-   private JTextArea taMotion;
+   private JLabel lblSummary;
+   private JLabel lblTarget;
+   private String maxHeight;
+   private String maxRange;
+   private String maxTime;
+   private JTextArea taInfo;
+   private JTextArea taTarget;
    private JButton btnLaunch;
    private JButton btnClear;
    private JButton btnMainMenu;
    private JButton btnExit;
+   private JButton btnTable;
+   
+   private JLabel lblDifficulty;
+   private JTextArea taMotion;
+   private String[] difficultyOptions;
+   private JComboBox<String> difficulty;
+   private String selectedDifficulty;
+   private ArrayList<Integer> buildings;
+   private Thread thread;
    
    private JPanel graphPanel;
-   
    private JSplitPane splitPane;
    private Visualizer visualizer;
    
-   private Thread thread;
+   private String target;
+   private double displacement;
+   private int counter;
 
    public Game(){
       super("Physics Game");
@@ -41,64 +60,45 @@ public class Game extends JFrame implements ActionListener{
       lblInitialAng = new JLabel("Initial Ang.");
       lblInitialSteps = new JLabel("# of Steps.");
       lblInitialHeight = new JLabel("Initial Height:");
+      lblSummary = new JLabel("Summary:");
+      lblTarget = new JLabel("Target");
+      lblDifficulty = new JLabel("Difficulty:");
       
-      tfInitialVel = new JTextField("100",7);
-      tfInitialAng = new JTextField("45",7);
+      tfInitialVel = new JTextField("0",7);
+      tfInitialAng = new JTextField("0",7);
       tfInitialSteps = new JTextField("100",7);    
       tfInitialHeight = new JTextField("0",7);
+      
+      String[] difficultyOptions = new String[] {"Easy", "Normal", "Hard"};
+      JComboBox<String> difficulty = new JComboBox<>(difficultyOptions);
+      selectedDifficulty = (String) difficulty.getSelectedItem();
       
       taMotion = new JTextArea(25, 40);  
       taMotion.setEditable(false);
       
+      //target = "1019";
+      target = "874.56"; //""+((Math.random()%900)*1000);
+      counter = 0;
+      
+      taInfo = new JTextArea(10, 15);  
+      taInfo.setEditable(false);
+      taTarget = new JTextArea(3, 7);
+      taTarget.setText(target);
+      taTarget.append(" (m)");
+      taTarget.setEditable(false);
+      
       btnLaunch = new JButton("Launch");
+      btnLaunch.setFocusPainted(false);
       btnClear = new JButton("Clear");
+      btnClear.setFocusPainted(false);
       btnMainMenu = new JButton("Main Menu");
+      btnMainMenu.setFocusPainted(false);
       btnExit = new JButton("Exit");
-      
-      //old layout
-      /*
-      JPanel westPanel = new JPanel();
-      //westPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-      westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
-         JPanel subWest1 = new JPanel();
-            subWest1.setLayout(new FlowLayout(FlowLayout.LEFT));
-            subWest1.add(lblInitialVel);
-            subWest1.add(tfInitialVel);
-      westPanel.add(subWest1);
-         JPanel subWest2 = new JPanel();
-            subWest2.setLayout(new FlowLayout(FlowLayout.LEFT));
-            subWest2.add(lblInitialAng);
-            subWest2.add(tfInitialAng);
-      westPanel.add(subWest2);
-         JPanel subWest3 = new JPanel();
-            subWest3.setLayout(new FlowLayout(FlowLayout.LEFT));
-            subWest3.add(lblInitialSteps);
-            subWest3.add(tfInitialSteps);
-      westPanel.add(subWest3);
-      
-      JPanel mainWestPanel = new JPanel();
-      mainWestPanel.add(westPanel);
-      
-      
-      JPanel eastPanel = new JPanel();
-         eastPanel.add(taMotion);
-           
-      JPanel mainEastPanel = new JPanel();
-      mainEastPanel.add(eastPanel);
-      
-      
-      JPanel southPanel = new JPanel();
-         JPanel subSouth1 = new JPanel();
-         subSouth1.setLayout(new BoxLayout(subSouth1, BoxLayout.X_AXIS));
-         subSouth1.add(btnCalculate);
-         subSouth1.add(btnClear); 
-         subSouth1.add(btnMainMenu);
-         subSouth1.add(btnExit);
-      southPanel.add(subSouth1);
-      
-      JPanel mainSouthPanel = new JPanel();
-      mainSouthPanel.add(southPanel);
-      */
+      btnExit.setFocusPainted(false);
+      btnTable = new JButton("Show Table");
+      btnTable.setFocusPainted(false);
+         
+      showTable = false;   
       
       JPanel eastPanel = new JPanel();
       eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
@@ -115,60 +115,77 @@ public class Game extends JFrame implements ActionListener{
          JPanel subEast3 = new JPanel();
          subEast3.setLayout(new BoxLayout(subEast3, BoxLayout.Y_AXIS));
          subEast3.add(lblInitialSteps);
-         subEast3.add(tfInitialSteps);  
-       
+         subEast3.add(tfInitialSteps);
+         
          JPanel subEast4 = new JPanel();
          subEast4.setLayout(new BoxLayout(subEast4, BoxLayout.Y_AXIS));
          subEast4.add(lblInitialHeight);
          subEast4.add(tfInitialHeight);
          
          JPanel subEast5 = new JPanel();
-         subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
          subEast5.add(btnLaunch);
-         subEast5.add(btnClear); 
-         subEast5.add(btnMainMenu);
-         subEast5.add(btnExit);
+         
+         JPanel subEast6 = new JPanel();
+         subEast6.add(btnClear);
+         
+         JPanel subEast7 = new JPanel();
+         subEast7.add(btnTable);
+         
+         JPanel subEast8 = new JPanel();
+         subEast8.add(btnMainMenu);
+         
+         JPanel subEast9 = new JPanel();
+         subEast9.add(btnExit);
+         
+         JPanel subEast10 = new JPanel();
+         subEast10.add(lblTarget);
+         
+         JPanel subEast11 = new JPanel();
+         subEast11.add(taTarget);
+         
+         JPanel subEast12 = new JPanel();
+         subEast12.add(lblSummary);
+         
+         JPanel subEast13 = new JPanel();
+         subEast13.add(taInfo);
          
       eastPanel.add(subEast1);
       eastPanel.add(subEast2);
       eastPanel.add(subEast3);
       eastPanel.add(subEast4);
       eastPanel.add(subEast5);
-      
-      //old layout
-      /* 
-      add(westPanel, BorderLayout.WEST);
-      add(mainWestPanel, BorderLayout.WEST);
-      add(mainEastPanel, BorderLayout.EAST);
-      add(mainSouthPanel, BorderLayout.SOUTH);
-      */
+      eastPanel.add(subEast6);
+      eastPanel.add(subEast7);
+      eastPanel.add(subEast7);
+      eastPanel.add(subEast8);
+      eastPanel.add(subEast9);
+      eastPanel.add(subEast10);
+      eastPanel.add(subEast11);
+      eastPanel.add(subEast12);
+      eastPanel.add(subEast13);
       
       JPanel mainEastPanel = new JPanel();
       mainEastPanel.add(eastPanel);
       
-         
-      //add(taMotion);
       add(mainEastPanel, BorderLayout.WEST);
-      //add(taMotion);
-      //add(graphPanel);
       
       graphPanel = new JPanel();
       graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-      //graphPanel.add(splitPane);
       
-      visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps); 
-      //add(visualizer.getRightPanel());
-      //add(visualizer.getLeftPanel());   
-      //graphPanel.add(visualizer.getLeftPanel());
-      //graphPanel.add(visualizer.getRightPanel());
-      graphPanel.add(visualizer.getPane());
-      graphPanel.setVisible(false);
-      add(graphPanel);
+      buildings = generateBuildings();//manish
+     visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty); 
+     
+     
+      splitPane = visualizer.getPane();
+      graphPanel.add(splitPane);
+      
+      add(graphPanel);  
       
       btnMainMenu.addActionListener(this);
       btnLaunch.addActionListener(this); 
       btnClear.addActionListener(this);
-      btnExit.addActionListener(this); 
+      btnExit.addActionListener(this);
+      btnTable.addActionListener(this); 
    }
    
    
@@ -187,28 +204,206 @@ public class Game extends JFrame implements ActionListener{
          Game.this.dispose();      
       }
       else if(event.getSource() == btnLaunch){
-         //visualizer.start();
-         //graphPanel.add(visualizer.getPane());
-         //add(visualizer.getRightPanel());
-         //add(visualizer.getLeftPanel());
+         double velocity = Double.parseDouble(tfInitialVel.getText());
+         double angle = Double.parseDouble(tfInitialAng.getText());
+         int steps = Integer.parseInt(tfInitialSteps.getText());
+         double height = Double.parseDouble(tfInitialHeight.getText());
+         
+         
+         if(velocity < 0){
+            taInfo.setText("Velocity must be positive\n");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfInitialHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty);
+            splitPane = visualizer.getPane();
+            //graphPanel.add(visualizer.getPane());
+            graphPanel.add(splitPane);
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate();       
+         }
+         else if(angle < 0 || angle > 90){
+            taInfo.setText("Angle must be between 0-90");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfInitialHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate(); 
+         }
+         else if(steps < 10){
+            taInfo.setText("Steps must be greater than 10");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfInitialHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate(); 
+         }
+         else if(height < 0){
+            taInfo.setText("Height must be positive");
+            Font font = new Font("", Font.BOLD, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.RED);
+            
+            tfInitialVel.setText("0");
+            tfInitialAng.setText("0");
+            tfInitialSteps.setText("0");
+            tfInitialHeight.setText("0");
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty);
+            graphPanel.add(visualizer.getPane());
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate(); 
+         }
+         else{
+            Font font =  new Font("", Font.PLAIN, 12);
+            taInfo.setFont(font);
+            taInfo.setForeground(Color.BLACK);
+            
+            remove(graphPanel);
+            graphPanel = new JPanel();
+            graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
+            graphPanel.setVisible(true);
+            visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty);
+            splitPane = visualizer.getPane();
+            graphPanel.add(splitPane);
+            //graphPanel.setVisible(false);
+            add(graphPanel);
+            validate();
+        
+            maxHeight = String.format("%.2f", visualizer.getMaxHeight()); 
+            taInfo.setText("Max Height:\n");
+            taInfo.append(maxHeight + " (m)\n\n");
+            
+            maxRange = Double.toString(visualizer.getMaxRange());
+            maxRange = String.format("%.2f", visualizer.getMaxRange());
+            taInfo.append("Max Range:\n");
+            taInfo.append(maxRange + " (m)\n\n");
+   
+            maxTime = Double.toString(visualizer.getTotalTime());
+            maxTime = String.format("%.2f", visualizer.getTotalTime());
+            taInfo.append("Max Time:\n");
+            taInfo.append(maxTime + " (s)\n\n");
+            
+            displacement = visualizer.getMaxRange();
+            if(Math.abs(displacement - Double.parseDouble(target)) <= 10){
+               JOptionPane.showMessageDialog(null, 
+                              "YOU WON!!!", 
+                              "Winner!!!", 
+                              JOptionPane.INFORMATION_MESSAGE);
+                              
+                              
+               MainMenu menu2 = new MainMenu();
+               menu2.setSize(500, 400);
+               menu2.setLocation(450, 100);
+               menu2.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+               menu2.setResizable(false);
+               menu2.setVisible(true);
+               Game.this.dispose(); 
+            }
+            else{
+               counter++;
+               if(counter == 3){
+                  JOptionPane.showMessageDialog(null, 
+                              "YOU LOSE!", 
+                              "Better luck next time!", 
+                              JOptionPane.INFORMATION_MESSAGE);
+                
+                
+                  MainMenu menu2 = new MainMenu();
+                  menu2.setSize(500, 400);
+                  menu2.setLocation(450, 100);
+                  menu2.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
+                  menu2.setResizable(false);
+                  menu2.setVisible(true);
+                  Game.this.dispose();               
+               }             
+                  tfInitialVel.setText("0");
+                  tfInitialAng.setText("0");
+                  tfInitialSteps.setText("100");
+                  tfInitialHeight.setText("0");
+                  taInfo.setText("");
+                  
+                  maxHeight = String.format("%.2f", visualizer.getMaxHeight()); 
+                  taInfo.setText("Max Height:\n");
+                  taInfo.append(maxHeight + " (m)\n\n");
+            
+                  maxRange = Double.toString(visualizer.getMaxRange());
+                  maxRange = String.format("%.2f", visualizer.getMaxRange());
+                  taInfo.append("Max Range:\n");
+                  taInfo.append(maxRange + " (m)\n\n");
+   
+                  maxTime = Double.toString(visualizer.getTotalTime());
+                  maxTime = String.format("%.2f", visualizer.getTotalTime());
+                  taInfo.append("Max Time:\n");
+                  taInfo.append(maxTime + " (s)\n\n");
+                  
+                  if(counter != 3){
+                  JOptionPane.showMessageDialog(null, 
+                              "Wrong!", 
+                              "Strike" + counter, 
+                              JOptionPane.INFORMATION_MESSAGE);
+                  }
+            }
+          }
+      }
+      else if(event.getSource() == btnClear){
+         tfInitialVel.setText("0");
+         tfInitialAng.setText("0");
+         tfInitialSteps.setText("0");
+         tfInitialHeight.setText("0");
+         taInfo.setText("");
+         
          remove(graphPanel);
          graphPanel = new JPanel();
          graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
          graphPanel.setVisible(true);
-         visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps);
+         visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfInitialHeight, tfInitialSteps, buildings, selectedDifficulty);
          graphPanel.add(visualizer.getPane());
          //graphPanel.setVisible(false);
          add(graphPanel);
          validate();
-         //add(visualizer.getRightPanel());
-         //add(visualizer.getLeftPanel());
-      }
-      else if(event.getSource() == btnClear){
-         tfInitialVel.setText("");
-         tfInitialAng.setText("");
-         tfInitialSteps.setText("");
-         tfInitialHeight.setText("");
-         taMotion.setText("");
       }
       else if(event.getSource() == btnExit){
          System.exit(0);
@@ -216,14 +411,29 @@ public class Game extends JFrame implements ActionListener{
        
    }
    
+   public ArrayList<Integer> generateBuildings() {
+      int width = (int)(Math.random()*100+100); //random width of building
+      int height = (int)(Math.random()*350+100); // random height for the first building
+          
+      int yMax = 712;
+      
+      ArrayList<Integer> buildings = new ArrayList<Integer>();
+            //loop through to make buildings
+      for (int i = 460; i < yMax + 460; i += (width + 10)){  //previously i = 0
+         // g.setColor(Color.black);
+         // g.fillRect(i, 880-height, width, height); //previously yMax - height for 2nd param
+         buildings.add(i);
+         buildings.add(880 - height);
+         buildings.add(width);
+         buildings.add(height);
+         height = (int)(Math.random()*462+100); // randomize height for next building
+      }
+      return buildings;
+   }
+   
    public static void main(String[] args){
       Game game  = new Game();
       game.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      //old sizing
-      /*
-      game.setSize(700, 550);
-      game.setLocation(350, 0);
-      */
       game.setExtendedState(JFrame.MAXIMIZED_BOTH); 
       game.setUndecorated(true);
       game.setVisible(true);
