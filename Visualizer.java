@@ -44,7 +44,7 @@ public class Visualizer extends JFrame {
     public double getTotalTime(){
       totalTime = this.projectile.totalTime();
       return totalTime;
-    }
+    } 
 
 
     public Visualizer() {

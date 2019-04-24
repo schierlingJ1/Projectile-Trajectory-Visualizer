@@ -5,6 +5,7 @@ import javax.swing.event.*;
 
 public class Calculator extends JFrame implements ActionListener{
    private final LayoutManager layout;
+   
    private boolean showTable;
 
    MainMenu menu;
@@ -67,68 +68,6 @@ public class Calculator extends JFrame implements ActionListener{
       btnTable.setFocusPainted(false);
       
       showTable = false;
-      //bunch of old layouts
-      /*
-      JPanel westPanel = new JPanel();
-      //westPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-      westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
-         JPanel subWest1 = new JPanel();
-            subWest1.setLayout(new FlowLayout(FlowLayout.LEFT));
-            subWest1.add(lblInitialVel);
-            subWest1.add(tfInitialVel);
-      westPanel.add(subWest1);
-         JPanel subWest2 = new JPanel();
-            subWest2.setLayout(new FlowLayout(FlowLayout.LEFT));
-            subWest2.add(lblInitialAng);
-            subWest2.add(tfInitialAng);
-      westPanel.add(subWest2);
-         JPanel subWest3 = new JPanel();
-            subWest3.setLayout(new FlowLayout(FlowLayout.LEFT));
-            subWest3.add(lblInitialSteps);
-            subWest3.add(tfInitialSteps);
-      westPanel.add(subWest3);
-      
-      JPanel mainWestPanel = new JPanel();
-      mainWestPanel.add(westPanel);
-      
-      
-      JPanel eastPanel = new JPanel();
-         eastPanel.add(taMotion);
-           
-      JPanel mainEastPanel = new JPanel();
-      mainEastPanel.add(eastPanel);
-      */
-      
-      /*
-      JPanel southPanel = new JPanel();
-      southPanel.setLayout(new BoxLayout(southPanel, BoxLayout.X_AXIS));
-         JPanel subSouth1 = new JPanel();
-         subSouth1.setLayout(new BoxLayout(subSouth1, BoxLayout.X_AXIS));
-         subSouth1.add(lblInitialVel);
-         subSouth1.add(tfInitialVel);
-         
-         JPanel subSouth2 = new JPanel();
-         subSouth2.setLayout(new BoxLayout(subSouth2, BoxLayout.X_AXIS));
-         subSouth1.add(lblInitialAng);
-         subSouth1.add(tfInitialAng);
-         
-         JPanel subSouth3 = new JPanel();
-         subSouth3.setLayout(new BoxLayout(subSouth3, BoxLayout.X_AXIS));
-         subSouth3.add(lblInitialSteps);
-         subSouth3.add(tfInitialSteps);
-         
-         
-         JPanel subSouth4 = new JPanel();
-         subSouth4.setLayout(new BoxLayout(subSouth4, BoxLayout.X_AXIS));
-         subSouth4.add(btnCalculate);
-         subSouth4.add(btnClear); 
-         subSouth4.add(btnMainMenu);
-         
-      southPanel.add(subSouth1);
-      southPanel.add(subSouth2);
-      southPanel.add(subSouth3);
-      southPanel.add(subSouth4);
-      */
       
       JPanel eastPanel = new JPanel();
       eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.Y_AXIS));
@@ -153,36 +92,24 @@ public class Calculator extends JFrame implements ActionListener{
          subEast4.add(tfHeight);
          
          JPanel subEast5 = new JPanel();
-         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
          subEast5.add(btnCalculate);
          
          JPanel subEast6 = new JPanel();
-         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
          subEast6.add(btnClear);
          
          JPanel subEast7 = new JPanel();
-         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
          subEast7.add(btnTable);
          
          JPanel subEast8 = new JPanel();
-         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
          subEast8.add(btnMainMenu);
          
          JPanel subEast9 = new JPanel();
-         //subEast9.setLayout(new BoxLayout(subEast9, BoxLayout.Y_AXIS));
-         //subEast5.add(btnCalculate);
-         //subEast5.add(btnClear); 
-         //subEast5.add(btnTable);
-         //subEast5.add(btnMainMenu);
          subEast9.add(btnExit);
          
          JPanel subEast10 = new JPanel();
-         //subEast10.setLayout(new BoxLayout(subEast10, BoxLayout.Y_AXIS));
          subEast10.add(lblSummary);
          
          JPanel subEast11 = new JPanel();
-         //subEast10.setLayout(new BoxLayout(subEast10, BoxLayout.Y_AXIS));
-         //subEast10.add(lblSummary);
          subEast11.add(taInfo);
          
       eastPanel.add(subEast1);
@@ -197,44 +124,20 @@ public class Calculator extends JFrame implements ActionListener{
       eastPanel.add(subEast9);
       eastPanel.add(subEast10);
       eastPanel.add(subEast11);
-      //eastPanel.add(taInfo);
       
-      //old layout
-      /*
-      JPanel mainSouthPanel = new JPanel();
-      mainSouthPanel.add(southPanel);
-      */
       JPanel mainEastPanel = new JPanel();
       mainEastPanel.add(eastPanel);
-      //old layout
-      /*   
-      add(westPanel, BorderLayout.WEST);
-      add(mainWestPanel, BorderLayout.WEST);
-      add(mainEastPanel, BorderLayout.EAST);
-      */
-      //add(taMotion);
-      add(mainEastPanel, BorderLayout.WEST);
-   
-      //add(taMotion);
-      //old layout
-      /*
-      add(mainSouthPanel, BorderLayout.EAST);
-      add(southPanel, BorderLayout.SOUTH);
-      */   
+      
+      add(mainEastPanel, BorderLayout.WEST);  
       
       graphPanel = new JPanel();
       graphPanel.setLayout(new BoxLayout(graphPanel, BoxLayout.X_AXIS));
-      //graphPanel.add(splitPane);
       
       visualizer = new Visualizer(graphPanel, tfInitialVel, tfInitialAng, tfHeight, tfInitialSteps); 
-      //add(visualizer.getRightPanel());
-      //add(visualizer.getLeftPanel());   
-      //graphPanel.add(visualizer.getLeftPanel());
-      //graphPanel.add(visualizer.getRightPanel());
+ 
       splitPane = visualizer.getPane();
-      //graphPanel.add(visualizer.getPane());
       graphPanel.add(splitPane);
-      //graphPanel.setVisible(false);
+      
       add(graphPanel);  
       
       btnMainMenu.addActionListener(this);
@@ -259,11 +162,6 @@ public class Calculator extends JFrame implements ActionListener{
             Calculator.this.dispose();      
       }
       else if(event.getSource() == btnCalculate){
-         //visualizer.start();
-         //graphPanel.add(visualizer.getPane());
-         //add(visualizer.getRightPanel());
-         //add(visualizer.getLeftPanel());
-         
          double velocity = Double.parseDouble(tfInitialVel.getText());
          double angle = Double.parseDouble(tfInitialAng.getText());
          int steps = Integer.parseInt(tfInitialSteps.getText());
@@ -410,19 +308,14 @@ public class Calculator extends JFrame implements ActionListener{
       }  
       else if(event.getSource() == btnTable){
          int w = visualizer.getWidth();
-         //System.out.println(w);
          //show table
          if (showTable == false) {
-            //visualizer.getPane().setDividerLocation((int)Math.round(w*2/3));
-            //visualizer.getPane().setDividerSize(10);
             splitPane.setDividerLocation((int)Math.round(w*2/3));
             splitPane.setDividerSize(10);
             btnTable.setText("Hide Table");
             showTable = true;
          //hide table
          } else {
-            //visualizer.getPane().setDividerLocation(w);
-            //visualizer.getPane().setDividerSize(1);
             splitPane.setDividerLocation(w);
             splitPane.setDividerSize(1);
             btnTable.setText("Show Table");
@@ -434,11 +327,6 @@ public class Calculator extends JFrame implements ActionListener{
    public static void main(String[] args){
       Calculator calculator  = new Calculator();
       calculator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      //old sizing
-      /*
-      calculator.setSize(700, 550);
-      calculator.setLocation(350, 0);
-      */
       calculator.setExtendedState(JFrame.MAXIMIZED_BOTH); 
       calculator.setUndecorated(true);
       calculator.setVisible(true);
