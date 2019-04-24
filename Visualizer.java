@@ -9,46 +9,46 @@ public class Visualizer extends JFrame {
     private JPanel leftPanel;
     private JPanel rightPanel;
     private ProjectileMotion projectile;
-    
+
     private static JTextField tfVelocity;
     private static JTextField tfAngle;
     private static JTextField tfHeight;
     private static JTextField tfSteps;
-    
+
     private double maxHeight;
     private double maxRange;
     private double totalTime;
-    
+
     private static JPanel mainPanel;
 
    /*
     public static void main(String args[]) {
         new Visualizer();
     }
-   */  
-    
+   */
+
     public JSplitPane getPane(){
       return canvas;
     }
-    
+
     public double getMaxHeight(){
       maxHeight = this.projectile.maxHeight();
       return maxHeight;
     }
-    
+
     public double getMaxRange(){
       maxRange = this.projectile.maxRange();
       return maxRange;
     }
-    
+
     public double getTotalTime(){
       totalTime = this.projectile.totalTime();
       return totalTime;
     }
 
-    
+
     public Visualizer() {
-         
+
         // get the screen size as a java dimension
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
@@ -63,15 +63,15 @@ public class Visualizer extends JFrame {
         setLeftPanel(width, height);
         setCanvas(width, height);
     }
-    
-    
+
+
     public Visualizer(JPanel mainPanel, JTextField tfVelocity, JTextField tfAngle, JTextField tfHeight, JTextField tfSteps) {
         this.tfVelocity = tfVelocity;
         this.tfAngle = tfAngle;
         this.tfHeight = tfHeight;
         this.tfSteps = tfSteps;
         this.mainPanel = mainPanel;
-        
+
         // get the screen size as a java dimension
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         int height = screenSize.height; // * {1/4, 1/2, 2/3} to scale window to fit % of screen
@@ -81,8 +81,8 @@ public class Visualizer extends JFrame {
         this.leftPanel = new JPanel();
         this.rightPanel = new JPanel();
         //this.projectile = new ProjectileMotion();
-        this.projectile = new ProjectileMotion(Double.parseDouble(tfVelocity.getText()), 
-        Double.parseDouble(tfAngle.getText()), Double.parseDouble(tfHeight.getText()), 
+        this.projectile = new ProjectileMotion(Double.parseDouble(tfVelocity.getText()),
+        Double.parseDouble(tfAngle.getText()), Double.parseDouble(tfHeight.getText()),
         Integer.parseInt(tfSteps.getText()));
 
 
@@ -90,7 +90,7 @@ public class Visualizer extends JFrame {
         setLeftPanel(width, height);
         setCanvas(width, height);
     }
-       
+
     public void setCanvas(int w, int h) {
         //set window width/height
         setSize(new Dimension(w, h));
@@ -107,11 +107,11 @@ public class Visualizer extends JFrame {
         //setVisible(true);
         //maximize window
         //setExtendedState(java.awt.Frame.MAXIMIZED_BOTH);
-        
+
         //mainPanel.add(canvas);
 
     }
-   
+
     public void setLeftPanel(int w, int h) {
         Visualizer.DrawArc grid = new DrawArc(w, h);
         this.leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // BoxLayout.Y_AXIS will arrange the content vertically
@@ -205,6 +205,22 @@ public class Visualizer extends JFrame {
             //----------------------------------------
         }
 
+        //draw blank grid without graph
+        public void blank(Graphics g) {
+            //draw white background for grid
+            g.setColor(Color.white);
+            g.fillRect(60, 0, this.width, this.height-200);
+
+            g.setColor(Color.black);
+            //x axis
+            g.drawLine(20, this.height-200, this.width, this.height-200);
+            g.drawLine(20, this.height-199, this.width, this.height-199);
+            //y axis
+            g.drawLine(60,0,60,this.height-160);
+            g.drawLine(61,0,61,this.height-160);
+            //----------------------------------------
+        }
+
         //draw dotted parabola trajectory
         public void parabola(Graphics g) {
             // 0,0 coordiante for graph
@@ -234,11 +250,12 @@ public class Visualizer extends JFrame {
                 */
                 //scale arc to grid
                 int yp = ((int)Math.round(maxY - moment[2])) + ((this.height-200) - (int)Math.round(Visualizer.this.projectile.maxHeight()));
+                /*
                 if (yp == (int)Math.round(Visualizer.this.projectile.maxHeight())) {
                     g.setColor(Color.yellow);
                     g.fillOval(xp-2, yp-2, 10, 10);
                 }
-
+               */
                 //show out of bounds as black
                 if (xp > this.width || yp > this.height-200) {
                     g.setColor(Color.black);

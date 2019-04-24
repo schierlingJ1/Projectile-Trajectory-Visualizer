@@ -17,6 +17,7 @@ public class Calculator extends JFrame implements ActionListener{
    private JLabel lblInitialAng;
    private JLabel lblInitialSteps;
    private JLabel lblHeight;
+   private JLabel lblSummary;
    private String maxHeight;
    private String maxRange;
    private String maxTime;
@@ -44,6 +45,7 @@ public class Calculator extends JFrame implements ActionListener{
       lblInitialAng = new JLabel("Initial Angle:");
       lblInitialSteps = new JLabel("# of Steps:");
       lblHeight = new JLabel("Initial Height:");
+      lblSummary = new JLabel("Summary:");
       
       tfInitialVel = new JTextField("0",7);
       tfInitialAng = new JTextField("0",7);
@@ -151,17 +153,37 @@ public class Calculator extends JFrame implements ActionListener{
          subEast4.add(tfHeight);
          
          JPanel subEast5 = new JPanel();
-         subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
+         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
          subEast5.add(btnCalculate);
-         subEast5.add(btnClear); 
-         subEast5.add(btnTable);
-         subEast5.add(btnMainMenu);
-         subEast5.add(btnExit);
-         
          
          JPanel subEast6 = new JPanel();
          //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
-         subEast6.add(taInfo);
+         subEast6.add(btnClear);
+         
+         JPanel subEast7 = new JPanel();
+         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
+         subEast7.add(btnTable);
+         
+         JPanel subEast8 = new JPanel();
+         //subEast5.setLayout(new BoxLayout(subEast5, BoxLayout.Y_AXIS));
+         subEast8.add(btnMainMenu);
+         
+         JPanel subEast9 = new JPanel();
+         //subEast9.setLayout(new BoxLayout(subEast9, BoxLayout.Y_AXIS));
+         //subEast5.add(btnCalculate);
+         //subEast5.add(btnClear); 
+         //subEast5.add(btnTable);
+         //subEast5.add(btnMainMenu);
+         subEast9.add(btnExit);
+         
+         JPanel subEast10 = new JPanel();
+         //subEast10.setLayout(new BoxLayout(subEast10, BoxLayout.Y_AXIS));
+         subEast10.add(lblSummary);
+         
+         JPanel subEast11 = new JPanel();
+         //subEast10.setLayout(new BoxLayout(subEast10, BoxLayout.Y_AXIS));
+         //subEast10.add(lblSummary);
+         subEast11.add(taInfo);
          
       eastPanel.add(subEast1);
       eastPanel.add(subEast2);
@@ -169,6 +191,12 @@ public class Calculator extends JFrame implements ActionListener{
       eastPanel.add(subEast4);
       eastPanel.add(subEast5);
       eastPanel.add(subEast6);
+      eastPanel.add(subEast7);
+      eastPanel.add(subEast7);
+      eastPanel.add(subEast8);
+      eastPanel.add(subEast9);
+      eastPanel.add(subEast10);
+      eastPanel.add(subEast11);
       //eastPanel.add(taInfo);
       
       //old layout
@@ -346,17 +374,17 @@ public class Calculator extends JFrame implements ActionListener{
         
             maxHeight = String.format("%.2f", visualizer.getMaxHeight()); 
             taInfo.setText("Max Height:\n");
-            taInfo.append(maxHeight + "\n\n");
+            taInfo.append(maxHeight + " (m)\n\n");
             
             maxRange = Double.toString(visualizer.getMaxRange());
             maxRange = String.format("%.2f", visualizer.getMaxRange());
             taInfo.append("Max Range:\n");
-            taInfo.append(maxRange + "\n\n");
+            taInfo.append(maxRange + " (m)\n\n");
    
             maxTime = Double.toString(visualizer.getTotalTime());
             maxTime = String.format("%.2f", visualizer.getTotalTime());
             taInfo.append("Max Time:\n");
-            taInfo.append(maxTime + "\n\n");
+            taInfo.append(maxTime + " (s)\n\n");
           }
             
       }
