@@ -12,7 +12,7 @@ public class Levels {
 	double screenAreaOccupied = 0.0;
 	List<Integer> xAvailable;
 	List<Building> buildings;
-	
+
 	//params: screenWidth, screenHeight, difficulty
 	public Levels(int screenWidth, int screenHeight, String difficulty) {
 		this.difficulty = difficulty;
@@ -23,7 +23,7 @@ public class Levels {
 		xAvailable = IntStream.rangeClosed(leftEdge, rightEdge).boxed().collect(Collectors.toList());
 		generateBuildings(screenWidth, screenHeight);
 	}
-	
+
 	//each building width shouldn't be greater than 20% of screen width
 	//no buildings should occupy the left 10% of the screen and right 10% of the screen
 	//each building height shouldn't be greater than 80% of screen height
@@ -40,7 +40,7 @@ public class Levels {
 			}
 		}
 	}
-	
+
 	private boolean validateBuildingPlacement(Building b) {
 		if(b.getCenter() - b.getRadius() < leftEdge || b.getCenter() + b.getRadius() > rightEdge)
 			return false;
@@ -50,21 +50,21 @@ public class Levels {
 			return false;
 		return true;
 	}
-	
+
 //	private void updateOccupiedSpace() {
 //		double occupiedSpace = 0;
 //		for(Building b : buildings)
 //			occupiedSpace += b.getArea();
 //		screenAreaOccupied = occupiedSpace / totalScreenArea;
 //	}
-	
+
 	private void updateOccupiedSpace(Building b) {
 		screenAreaOccupied += b.getArea() / totalScreenArea;
 		//https://stackoverflow.com/questions/10242380/how-can-i-generate-a-list-or-array-of-sequential-integers-in-java/22829036
 		xAvailable.removeAll(IntStream.rangeClosed(b.getCenter() - b.getRadius(), b.getCenter() + b.getRadius())
 				.boxed().collect(Collectors.toList()));
 	}
-	
+
 	public List<Building> getBuildings() {
 		return buildings;
 	}
@@ -72,22 +72,22 @@ public class Levels {
 
 class Building {
 	int width, height, center, radius;
-	
+
 	Building(int width, int height, int center) {
 		this.width = width;
 		this.height = height;
 		this.center = center;
 		this.radius = width / 2;
 	}
-	
+
 	double getArea() {
 		return width * height;
 	}
-	
+
 	int getCenter() {
 		return center;
 	}
-	
+
 	int getRadius() {
 		return radius;
 	}
