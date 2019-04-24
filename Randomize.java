@@ -7,6 +7,10 @@ public class Randomize extends JPanel{
   //int xMax = 800;
   int yMax = 712;
   
+  public Randomize() {
+  
+  }
+  
   @Override public void paint(Graphics g){
     Graphics2D thingy = (Graphics2D) g;
     
@@ -21,11 +25,11 @@ public class Randomize extends JPanel{
     }
   }
   
-  public static void main(String[] args){ 
-    JFrame frame = new JFrame("Frame"); 
-    frame.add(new JPanelExample());
-    frame.setBackground(Color.WHITE);
-    frame.setSize(800, 750); 
-    frame.setVisible(true);
-  }
+//   public static void main(String[] args){ 
+//     JFrame frame = new JFrame("Frame"); 
+//     frame.add(new Randomize());
+//     frame.setBackground(Color.WHITE);
+//     frame.setSize(800, 750); 
+//     frame.setVisible(true);
+//   }
 }
